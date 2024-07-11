@@ -4,6 +4,9 @@ import {useEffect, useState} from "react";
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import {convertTextToPdf} from "@/app/(home)/actions";
 import packageJson from '../../../../../package.json';
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 type ComponentType = {}
 
@@ -30,6 +33,8 @@ const loadConversionHistory = () => {
 
 export const PdfConverter = ({}: ComponentType) => {
     const pdfjsVersion = packageJson.devDependencies['pdfjs-dist'];
+
+    const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
     const [text, setText] = useState('');
     const [pdfUrl, setPdfUrl] = useState<Uint8Array>(null);
@@ -104,10 +109,11 @@ export const PdfConverter = ({}: ComponentType) => {
                 </button>
 
                 {isClient && pdfUrl && (
-                    <div className={'flex items-center  h-[250px] w-[50vw] mt-[24px]'}>
+                    <div className={'flex items-center h-[250px] mt-[24px] min-w-[50vw] max-w-[50vw]'}>
                         <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.js`}>
                             <Viewer
                                 fileUrl={pdfUrl}
+                                plugins={[defaultLayoutPluginInstance]}
                             />
                         </Worker>
                     </div>
@@ -117,7 +123,7 @@ export const PdfConverter = ({}: ComponentType) => {
                 <h2 className="text-xl mb-[8px]">Conversion History</h2>
                 {
                     isClient && (
-                        <ul className="list-disc text-center">
+                        <ul className="list-disc">
                             {conversionHistory.map((item, index) => (
                                 <li key={index} className="text-blue-500 cursor-pointer list-none"
                                     onClick={() => handleHistoryItemClick(item)}>
