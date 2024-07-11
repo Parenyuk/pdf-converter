@@ -56,13 +56,6 @@ export const PdfConverter = ({}: ComponentType) => {
         console.log('savedHistory', savedHistory);
     }, []);
 
-    // useEffect(() => {
-    //     const savedHistory = localStorage.getItem('pdfConversionHistory');
-    //     if (savedHistory) {
-    //         setConversionHistory(JSON.parse(savedHistory));
-    //     }
-    // }, []);
-
     useEffect(() => {
         localStorage.setItem('pdfConversionHistory', JSON.stringify(conversionHistory));
     }, [conversionHistory]);
@@ -94,47 +87,48 @@ export const PdfConverter = ({}: ComponentType) => {
     }, [conversionHistory]);
 
     return (
-        <div className="flex flex-col items-center">
-            <h1 className="text-xl">Pdf Converter</h1>
-            <textarea
-                className="mx-0 my-2 px-4 py-3 rounded min-h-[250px] min-w-[400px] resize-y"
-                rows="10"
-                placeholder="Enter the text"
-                onChange={(e) => setText(e.target.value)}
-            />
-            <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transition-transform transform focus:outline-none focus:ring-blue-300 focus:ring-opacity-50"
-                onClick={handleConvertToPdf}
-            >
-                Convert to PDF
-            </button>
+        <div className="flex">
+            <div className="flex flex-col items-center">
+                <h1 className="text-xl">Pdf Converter</h1>
+                <textarea
+                    className="mx-0 my-2 px-4 py-3 rounded min-h-[250px] w-[50vw] resize-y"
+                    rows="10"
+                    placeholder="Enter the text"
+                    onChange={(e) => setText(e.target.value)}
+                />
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transition-transform transform focus:outline-none focus:ring-blue-300 focus:ring-opacity-50"
+                    onClick={handleConvertToPdf}
+                >
+                    Convert to PDF
+                </button>
 
-            {isClient && (
-                <>
-                    <div className="mt-4">
-                        <h2 className="text-lg mb-2">Conversion History</h2>
-                        <ul className="list-disc pl-4">
+                {isClient && pdfUrl && (
+                    <div className={'flex items-center  h-[250px] w-[50vw] mt-[24px]'}>
+                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.js`}>
+                            <Viewer
+                                fileUrl={pdfUrl}
+                            />
+                        </Worker>
+                    </div>
+                )}
+            </div>
+            <div className='ml-[40px] min-w-[180px]'>
+                <h2 className="text-xl mb-[8px]">Conversion History</h2>
+                {
+                    isClient && (
+                        <ul className="list-disc text-center">
                             {conversionHistory.map((item, index) => (
-                                <li key={index} className="text-blue-500 cursor-pointer" onClick={() => handleHistoryItemClick(item)}>
+                                <li key={index} className="text-blue-500 cursor-pointer list-none"
+                                    onClick={() => handleHistoryItemClick(item)}>
                                     Converted Document {index + 1}
                                 </li>
                             ))}
                         </ul>
-                    </div>
-
-                    <div className="h-screen w-screen">
-                        {pdfUrl && (
-                            <div className={'flex items-center  h-[250px] w-[50vw]'}>
-                                <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.js`}>
-                                    <Viewer
-                                        fileUrl={pdfUrl}
-                                    />
-                                </Worker>
-                            </div>
-                        )}
-                    </div>
-                </>
-            )}
+                    )
+                }
+            </div>
         </div>
+
     );
 };
