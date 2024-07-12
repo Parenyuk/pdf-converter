@@ -9,24 +9,18 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 const loadConversionHistory = () => {
-    if (typeof window !== "undefined") {
-        const savedHistory = localStorage.getItem('pdfConversionHistory');
-        if (savedHistory) {
-            try {
-                const parsedHistory = JSON.parse(savedHistory);
-                if (Array.isArray(parsedHistory)) {
-                    return parsedHistory;
-                } else {
-                    console.error('Invalid data format in localStorage');
-                    return [];
-                }
-            } catch (error) {
-                console.error('Error parsing localStorage data:', error);
-                return [];
-            }
-        }
+    if (typeof window === "undefined") return [];
+
+    const savedHistory = localStorage.getItem('pdfConversionHistory');
+    if (!savedHistory) return [];
+
+    try {
+        const parsedHistory = JSON.parse(savedHistory);
+        return Array.isArray(parsedHistory) ? parsedHistory : [];
+    } catch (error) {
+        console.error('Error parsing localStorage data:', error);
+        return [];
     }
-    return [];
 };
 
 export const PdfConverter = () => {
@@ -54,14 +48,6 @@ export const PdfConverter = () => {
         }
     }, [conversionHistory, isClient]);
 
-    useEffect(() => {
-        const savedHistory = localStorage.getItem('pdfConversionHistory');
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('pdfConversionHistory', JSON.stringify(conversionHistory));
-    }, [conversionHistory]);
-
     const handleHistoryItemClick = async (pdfUrl: Uint8Array) => {
             try {
                 setPdfUrl(pdfUrl);
@@ -69,7 +55,6 @@ export const PdfConverter = () => {
                 console.error('Error loading PDF:', error);
             }
     };
-
 
     const handleConvertToPdf = async () => {
         try {
