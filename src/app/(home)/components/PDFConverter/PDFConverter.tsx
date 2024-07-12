@@ -76,7 +76,7 @@ export const PdfConverter = () => {
         try {
             const pdfUrl = await convertTextToPdf(text);
             console.log('pdfUrl111', pdfUrl);
-            setPdfUrl(pdfUrl as any);
+            setPdfUrl(pdfUrl);
 
             setConversionHistory(prevHistory => [...prevHistory, pdfUrl]);
         } catch (error) {
