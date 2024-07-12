@@ -1,8 +1,8 @@
 "use client"
 import { Viewer, Worker } from "@react-pdf-viewer/core";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import '@react-pdf-viewer/core/lib/styles/index.css';
-import {convertTextToPdf} from "@/app/(home)/actions";
+import { convertTextToPdf } from "@/app/(home)/actions";
 import packageJson from '../../../../../package.json';
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
@@ -56,7 +56,6 @@ export const PdfConverter = () => {
 
     useEffect(() => {
         const savedHistory = localStorage.getItem('pdfConversionHistory');
-        console.log('savedHistory', savedHistory);
     }, []);
 
     useEffect(() => {
@@ -75,7 +74,6 @@ export const PdfConverter = () => {
     const handleConvertToPdf = async () => {
         try {
             const pdfUrl = await convertTextToPdf(text);
-            console.log('pdfUrl111', pdfUrl);
             setPdfUrl(pdfUrl);
 
             setConversionHistory(prevHistory => [...prevHistory, pdfUrl]);
@@ -83,10 +81,6 @@ export const PdfConverter = () => {
             console.error('Error:', error);
         }
     };
-
-    useEffect(() => {
-        console.log('conversionHistory', conversionHistory);
-    }, [conversionHistory]);
 
     return (
         <div className="flex">
