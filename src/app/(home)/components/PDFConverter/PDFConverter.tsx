@@ -97,7 +97,12 @@ export const PdfConverter = () => {
                 )}
             </div>
             <div className='ml-[40px] min-w-[180px]'>
-                <h2 className="text-xl mb-[8px]">Conversion History</h2>
+                {
+                    conversionHistory.length > 0 && (
+                        <h2 className="text-xl mb-[8px]">Conversion History</h2>
+                    )
+                }
+
                 {
                     isClient && (
                         <ul className="list-disc">
