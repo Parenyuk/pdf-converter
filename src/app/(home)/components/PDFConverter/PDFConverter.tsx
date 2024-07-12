@@ -1,14 +1,12 @@
 "use client"
 import { Viewer, Worker } from "@react-pdf-viewer/core";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import '@react-pdf-viewer/core/lib/styles/index.css';
-import {convertTextToPdf} from "@/app/(home)/actions";
+import { convertTextToPdf } from "@/app/(home)/actions";
 import packageJson from '../../../../../package.json';
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-
-type ComponentType = {}
 
 const loadConversionHistory = () => {
     if (typeof window !== "undefined") {
@@ -31,15 +29,15 @@ const loadConversionHistory = () => {
     return [];
 };
 
-export const PdfConverter = ({}: ComponentType) => {
+export const PdfConverter = () => {
     const pdfjsVersion = packageJson.devDependencies['pdfjs-dist'];
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
     const [text, setText] = useState('');
-    const [pdfUrl, setPdfUrl] = useState<Uint8Array>(null);
+    const [pdfUrl, setPdfUrl] = useState<Uint8Array | null>(null);
 
-    const [conversionHistory, setConversionHistory] = useState<string[]>(loadConversionHistory());
+    const [conversionHistory, setConversionHistory] = useState(loadConversionHistory());
 
     const [isClient, setIsClient] = useState(false);
 
@@ -58,27 +56,24 @@ export const PdfConverter = ({}: ComponentType) => {
 
     useEffect(() => {
         const savedHistory = localStorage.getItem('pdfConversionHistory');
-        console.log('savedHistory', savedHistory);
     }, []);
 
     useEffect(() => {
         localStorage.setItem('pdfConversionHistory', JSON.stringify(conversionHistory));
     }, [conversionHistory]);
 
-    const handleHistoryItemClick = async (pdfUrl: string) => {
-        try {
-            // Завантажуємо pdfUrl для перегляду
-            setPdfUrl(pdfUrl);
-        } catch (error) {
-            console.error('Error loading PDF:', error);
-        }
+    const handleHistoryItemClick = async (pdfUrl: Uint8Array) => {
+            try {
+                setPdfUrl(pdfUrl);
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+            }
     };
 
 
     const handleConvertToPdf = async () => {
         try {
             const pdfUrl = await convertTextToPdf(text);
-            console.log('pdfUrl', pdfUrl);
             setPdfUrl(pdfUrl);
 
             setConversionHistory(prevHistory => [...prevHistory, pdfUrl]);
@@ -87,22 +82,19 @@ export const PdfConverter = ({}: ComponentType) => {
         }
     };
 
-    useEffect(() => {
-        console.log('conversionHistory', conversionHistory);
-    }, [conversionHistory]);
-
     return (
         <div className="flex">
             <div className="flex flex-col items-center">
                 <h1 className="text-xl">Pdf Converter</h1>
                 <textarea
                     className="mx-0 my-2 px-4 py-3 rounded min-h-[250px] w-[50vw] resize-y"
-                    rows="10"
+                    rows={10}
                     placeholder="Enter the text"
                     onChange={(e) => setText(e.target.value)}
                 />
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transition-transform transform focus:outline-none focus:ring-blue-300 focus:ring-opacity-50"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg
+                    transition-transform transform focus:outline-none focus:ring-blue-300 focus:ring-opacity-50"
                     onClick={handleConvertToPdf}
                 >
                     Convert to PDF
@@ -135,6 +127,5 @@ export const PdfConverter = ({}: ComponentType) => {
                 }
             </div>
         </div>
-
     );
 };

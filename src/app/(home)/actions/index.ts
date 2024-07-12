@@ -16,8 +16,8 @@ export async function convertTextToPdf(text: string) {
         if (response.ok) {
             const res = await response.blob();
             const blob = new Blob([res], { type: 'application/pdf' });
-            const UintArr = new Uint8Array(await blob.arrayBuffer());
-            return UintArr;
+            const uintArr = new Uint8Array(await blob.arrayBuffer());
+            return uintArr;
 
         } else {
             throw new Error(`Failed to create PDF: ${response.statusText}`);
