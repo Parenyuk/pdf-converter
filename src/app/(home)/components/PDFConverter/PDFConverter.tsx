@@ -8,8 +8,6 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
-type ComponentType = {}
-
 const loadConversionHistory = () => {
     if (typeof window !== "undefined") {
         const savedHistory = localStorage.getItem('pdfConversionHistory');
@@ -31,15 +29,15 @@ const loadConversionHistory = () => {
     return [];
 };
 
-export const PdfConverter = ({}: ComponentType) => {
+export const PdfConverter = () => {
     const pdfjsVersion = packageJson.devDependencies['pdfjs-dist'];
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
     const [text, setText] = useState('');
-    const [pdfUrl, setPdfUrl] = useState<Uint8Array>(null);
+    const [pdfUrl, setPdfUrl] = useState<Uint8Array | null>(null);
 
-    const [conversionHistory, setConversionHistory] = useState<string[]>(loadConversionHistory());
+    const [conversionHistory, setConversionHistory] = useState(loadConversionHistory());
 
     const [isClient, setIsClient] = useState(false);
 
@@ -65,20 +63,20 @@ export const PdfConverter = ({}: ComponentType) => {
         localStorage.setItem('pdfConversionHistory', JSON.stringify(conversionHistory));
     }, [conversionHistory]);
 
-    const handleHistoryItemClick = async (pdfUrl: string) => {
-        try {
-            setPdfUrl(pdfUrl);
-        } catch (error) {
-            console.error('Error loading PDF:', error);
-        }
+    const handleHistoryItemClick = async (pdfUrl: Uint8Array) => {
+            try {
+                setPdfUrl(pdfUrl);
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+            }
     };
 
 
     const handleConvertToPdf = async () => {
         try {
             const pdfUrl = await convertTextToPdf(text);
-            console.log('pdfUrl', pdfUrl);
-            setPdfUrl(pdfUrl);
+            console.log('pdfUrl111', pdfUrl);
+            setPdfUrl(pdfUrl as any);
 
             setConversionHistory(prevHistory => [...prevHistory, pdfUrl]);
         } catch (error) {
@@ -96,7 +94,7 @@ export const PdfConverter = ({}: ComponentType) => {
                 <h1 className="text-xl">Pdf Converter</h1>
                 <textarea
                     className="mx-0 my-2 px-4 py-3 rounded min-h-[250px] w-[50vw] resize-y"
-                    rows="10"
+                    rows={10}
                     placeholder="Enter the text"
                     onChange={(e) => setText(e.target.value)}
                 />
@@ -135,6 +133,5 @@ export const PdfConverter = ({}: ComponentType) => {
                 }
             </div>
         </div>
-
     );
 };
