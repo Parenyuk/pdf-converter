@@ -1,8 +1,8 @@
 
 export default async function HomeLayout({
-                                             children,
-                                         }: Readonly<{
+  children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
-    return children;
+  return children;
 }
