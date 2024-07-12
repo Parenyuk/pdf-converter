@@ -50,6 +50,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 │   │   ├── global.css         # global styles
 │   │   └── layout.tsx         # entry layout
 
+## Branches
+* `main` - Branch for production version
+* `dev` - Branch for development
 
 ## Guidelines
 1. Prefer `const` to `let`.
