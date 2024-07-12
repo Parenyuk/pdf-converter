@@ -58,3 +58,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 1. Prefer `const` to `let`.
 2. Prefer `async` / `await` to `then`.
 3. Prefer function expression with arrows
+4. Use `prettier` and `eslint` with configs located in this repo.
