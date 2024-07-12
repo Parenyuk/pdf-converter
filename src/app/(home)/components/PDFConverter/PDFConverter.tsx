@@ -67,7 +67,6 @@ export const PdfConverter = ({}: ComponentType) => {
 
     const handleHistoryItemClick = async (pdfUrl: string) => {
         try {
-            // Завантажуємо pdfUrl для перегляду
             setPdfUrl(pdfUrl);
         } catch (error) {
             console.error('Error loading PDF:', error);
@@ -102,7 +101,8 @@ export const PdfConverter = ({}: ComponentType) => {
                     onChange={(e) => setText(e.target.value)}
                 />
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transition-transform transform focus:outline-none focus:ring-blue-300 focus:ring-opacity-50"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg
+                    transition-transform transform focus:outline-none focus:ring-blue-300 focus:ring-opacity-50"
                     onClick={handleConvertToPdf}
                 >
                     Convert to PDF
